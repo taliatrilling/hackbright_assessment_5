@@ -19,8 +19,13 @@ class Model(db.Model):
     
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     year = db.Column(db.Integer, nullable=False)
-    brand_name = db.Column(db.String(50))
+    brand_name = db.Column(db.String(50), db.ForeignKey("brands.name"))
     name = db.Column(db.String(50), nullable=False)
+
+    def __repr__(self):
+        """Gives information when instance printed"""
+
+        return "<Model id=%s name=%s brand_name=%s>" % (self.id, self.name, self.brand_name)
 
 
 class Brand(db.Model):
@@ -33,6 +38,13 @@ class Brand(db.Model):
     founded = db.Column(db.Integer)
     headquarters = db.Column(db.String(50))
     discontinued = db.Column(db.Integer)
+
+    models = db.relationship("Model", backref="brands")
+
+    def __repr__(self):
+        """Gives information when instance printed"""
+
+        return "<Brand id=%s name=%s>" % (self.id, self.name) 
 
 # End Part 1
 
