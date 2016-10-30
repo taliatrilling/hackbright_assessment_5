@@ -92,9 +92,16 @@ def get_brands_summary():
 # 1. What is the returned value and datatype of
 # ``Brand.query.filter_by(name='Ford')``?
 
+# The above query will return a BaseQuery object of the brand with the name Ford. However, because our query 
+# doesn't have something on it to specify which records to fetch (like . all()), what we can do with the 
+# object is somewhat limited.
 
 # 2. In your own words, what is an association table, and what *type* of
 # relationship does an association table manage?
+
+# An association table is the table that connects the two tables of interest in a "many to many" data model. Unlike a 
+# middle table, the fields in an association table don't represent anything the user is actually interested in, and 
+# instead act to enable the relationship between the other tables. 
 
 # -------------------------------------------------------------------
 # Part 3
@@ -119,7 +126,6 @@ def get_models_between(start_year, end_year):
 
     return objects
  
-
 
 
 
