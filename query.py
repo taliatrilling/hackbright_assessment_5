@@ -58,19 +58,40 @@ def get_model_info(year):
     '''Takes in a year, and prints out each model, brand_name, and brand
     headquarters for that year using only ONE database query.'''
 
-    pass
+    year_models = db.session.query(Model.name, Model.brand_name, Brand.headquarters).distinct(Model.id).filter(Model.year == year).outerjoin(Brand).all()
+
+    for name, brand_name, headquarters in year_models:
+    	if headquarters is not None:
+    		print name, brand_name, headquarters + "\n"
+    	else:
+			print name, brand_name, "-" + "\n"
+
 
 def get_brands_summary():
-    '''Prints out each brand name, and each model name for that brand
-     using only ONE database query.'''
+	'''Prints out each brand name, and each model name for that brand
+	using only ONE database query.'''
+	brand_summary = db.session.query(Brand.name, Model.name).distinct(Model.name).filter(Model.brand_name == Brand.name).all()
 
-    pass
+	brands = {}
+	for item in brand_summary:
+		if item[0] in brands.keys():
+			existing_models = brands[item[0]]
+			existing_models.append(item[1])
+			brands[item[0]] = existing_models
+		else:
+			brands[item[0]] = [item[1]]
+
+	for key, value in brands.items():
+		print "\nBrand name:" + key
+		for item in value:
+			print item
 
 # -------------------------------------------------------------------
 # Part 2.5: Discussion Questions (Include your answers as comments.)
 
 # 1. What is the returned value and datatype of
 # ``Brand.query.filter_by(name='Ford')``?
+
 
 # 2. In your own words, what is an association table, and what *type* of
 # relationship does an association table manage?
@@ -79,8 +100,29 @@ def get_brands_summary():
 # Part 3
 
 def search_brands_by_name(mystr):
-    pass
+	"""Takes in an string, returns a list of objects that are the brands whose names contain or are equal to the string"""
+	objects = []
+	names = db.session.query(Brand.name).distinct(Brand.name).filter((Brand.name == mystr) | (Brand.name.like("%" + mystr + "%"))).all()
 
+	for name in names:
+		objects.append(name[0])
+
+	return objects
 
 def get_models_between(start_year, end_year):
-    pass
+    """Takes in two integers of years and returns a list of the models with years that fall between them"""
+    objects = []
+    names = db.session.query(Model.name).distinct(Model.name).filter(Model.year >= start_year, Model.year < end_year).all()
+
+    for name in names:
+    	objects.append(name[0])
+
+    return objects
+ 
+
+
+
+
+
+
+
